@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios de Dimensionamento Elétrico - NBR 5410</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --bg: #f8fafc;
+            --text: #334155;
+            --text-dark: #0f172a;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --accent: #f59e0b;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .progress-container {
+            background: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 75px;
+            z-index: 99;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.02);
+        }
+        .progress-bar-bg {
+            background-color: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-bar-fill {
+            background-color: var(--success);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+        .container {
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .instructions {
+            background: #fff;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.05);
+        }
+        .instructions h2 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .instructions p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .bloco-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 24px 0 12px 0;
+            padding-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.02);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card.completed {
+            border-color: var(--success);
+            background-color: #f0fdf4;
+        }
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            padding-right: 8px;
+        }
+        .card-desc {
+            font-size: 0.88rem;
+            color: var(--text);
+            margin-bottom: 14px;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px dashed #cbd5e1;
+        }
+        .card.completed .card-desc {
+            background: #ffffff;
+        }
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .input-group input {
+            padding: 8px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            background: #fff;
+            color: var(--text-dark);
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+        .checkbox-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-label input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+        .btn-clear {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgb(239 68 68 / 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Treinamento de Dimensionamento</h1>
+    <p>Critérios: Seção Mínima, Condução (Iz'), Proteção (In) e Queda de Tensão</p>
+</header>
+
+<div class="progress-container">
+    <div class="progress-text">
+        <span>Progresso Geral</span>
+        <span id="progress-count">0 / 30 resolvidos</span>
+    </div>
+    <div class="progress-bar-bg">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="instructions">
+        <h2>Instruções de Treinamento:</h2>
+        <p>Preencha os campos de rascunho de cada cenário e marque o checklist ao concluir. Use a regra regulamentar: <strong>I<sub>b</sub> &le; I<sub>n</sub> &le; I<sub>z</sub>'</strong> junto ao catálogo Corfio.</p>
+    </div>
+
+    <form id="exercises-form">
+
+        <div class="bloco-header">Bloco 1: Circuitos Residenciais e Comerciais Básicos</div>
+
+        <div class="card" id="card-1">
+            <div class="card-header">
+                <span class="card-title">Cenário 1: Iluminação de Sala Comercial</span>
+            </div>
+            <div class="card-desc">
+                Dimensionar o circuito de iluminação. Corrente de projeto <strong>I<sub>b</sub> = 8 A</strong>. Método de instalação <strong>B1</strong> (eletroduto embutido em alvenaria), condutores de cobre com isolação em <strong>PVC</strong>, 2 condutores carregados. Temperatura ambiente de 30°C e nenhum outro circuito no eletroduto. Distância: 15 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-1" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-1" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-1" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-1" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-1" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-1" onchange="toggleComplete(1)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-2">
+            <div class="card-header">
+                <span class="card-title">Cenário 2: Tomadas de Uso Geral (TUG) de Quarto</span>
+            </div>
+            <div class="card-desc">
+                Circuito de TUGs de um quarto residencial. <strong>I<sub>b</sub> = 12 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, cobre, 2 condutores carregados. Temperatura ambiente de <strong>35°C</strong> (exige FCT). Eletroduto exclusivo. Distância: 22 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-2" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-2" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-2" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-2" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-2" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-2" onchange="toggleComplete(2)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-3">
+            <div class="card-header">
+                <span class="card-title">Cenário 3: Chuveiro Elétrico Residencial</span>
+            </div>
+            <div class="card-desc">
+                Circuito para um chuveiro elétrico (220V, 7700W, <strong>I<sub>b</sub> = 35 A</strong>). Método <strong>B1</strong>, isolação em <strong>PVC</strong>, cobre, 2 condutores carregados. Temperatura ambiente de 30°C, porém divide o eletroduto com <strong>mais 2 circuitos</strong> (total de 3 circuitos no conduto - exige FCA). Distância: 18 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-3" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-3" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-3" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-3" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-3" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-3" onchange="toggleComplete(3)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-4">
+            <div class="card-header">
+                <span class="card-title">Cenário 4: TUGs de Cozinha Comercial</span>
+            </div>
+            <div class="card-desc">
+                Circuito de TUGs de uma cozinha comercial. <strong>I<sub>b</sub> = 18 A</strong>. Método <strong>B1</strong>, condutores de cobre com isolação em <strong>EPR (90°C)</strong>, 2 condutores carregados. Temperatura de <strong>40°C</strong> e agrupado com <strong>mais 1 circuito</strong> no mesmo eletroduto. Distância: 25 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-4" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-4" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-4" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-4" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-4" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-4" onchange="toggleComplete(4)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-5">
+            <div class="card-header">
+                <span class="card-title">Cenário 5: Ar-Condicionado Central de Escritório</span>
+            </div>
+            <div class="card-desc">
+                Circuito trifásico equilibrado para sistema de ar-condicionado central. <strong>I<sub>b</sub> = 28 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 3 condutores carregados. Temperatura de 30°C, eletroduto exclusivo. Distância: 35 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-5" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-5" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-5" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-5" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-5" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-5" onchange="toggleComplete(5)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-6">
+            <div class="card-header">
+                <span class="card-title">Cenário 6: Iluminação Externa de Condomínio</span>
+            </div>
+            <div class="card-desc">
+                Circuito de iluminação externa. <strong>I<sub>b</sub> = 6 A</strong>. Método <strong>D</strong> (eletroduto enterrado no solo), isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura do solo de 20°C e agrupado com <strong>outro circuito</strong> de iluminação no mesmo duto. Distância: 60 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-6" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-6" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-6" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-6" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-6" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-6" onchange="toggleComplete(6)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="bloco-header">Bloco 2: Queda de Tensão como Fator Determinante</div>
+
+        <div class="card" id="card-7">
+            <div class="card-header">
+                <span class="card-title">Cenário 7: Alimentação de Edícula de Fundos</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de uma edícula nos fundos de um terreno residencial. Circuito monofásico (220V), <strong>I<sub>b</sub> = 24 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados, sem fatores de agrupamento ou temperatura agressivos. Distância: <strong>75 metros</strong>. Limite de queda de tensão: 2%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-7" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-7" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-7" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-7" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-7" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-7" onchange="toggleComplete(7)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-8">
+            <div class="card-header">
+                <span class="card-title">Cenário 8: Bombas de Recalque de Água</span>
+            </div>
+            <div class="card-desc">
+                Circuito de bombas de recalque em edifício residencial. Motor trifásico (380V), <strong>I<sub>b</sub> = 15 A</strong>. Método <strong>B1</strong>, isolação <strong>EPR</strong>, 3 condutores carregados. Temperatura de 30°C, eletroduto exclusivo. Distância: <strong>90 metros</strong>. Limite de queda de tensão: 4%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-8" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-8" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-8" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-8" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-8" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-8" onchange="toggleComplete(8)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-9">
+            <div class="card-header">
+                <span class="card-title">Cenário 9: Alimentação de Quiosque de Praia</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de um quiosque a partir do quadro principal do hotel. Circuito monofásico (220V), <strong>I<sub>b</sub> = 32 A</strong>. Método <strong>D</strong> (diretamente enterrado), isolação <strong>EPR</strong>, 2 condutores carregados. Temperatura do solo de 25°C. Distância: <strong>120 metros</strong>. Limite de queda de tensão: 3%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-9" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-9" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-9" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-9" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-9" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-9" onchange="toggleComplete(9)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-10">
+            <div class="card-header">
+                <span class="card-title">Cenário 10: Forno de Padaria Industrial</span>
+            </div>
+            <div class="card-desc">
+                Circuito trifásico (220V) para um forno de padaria. <strong>I<sub>b</sub> = 45 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 3 condutores carregados. Temperatura ambiente de <strong>45°C</strong> (cozinha quente) e agrupado com <strong>mais 1 circuito</strong>. Distância: <strong>40 metros</strong>. Limite de queda de tensão: 2,5%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-10" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-10" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-10" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-10" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-10" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-10" onchange="toggleComplete(10)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-11">
+            <div class="card-header">
+                <span class="card-title">Cenário 11: Laboratório de Informática (127V)</span>
+            </div>
+            <div class="card-desc">
+                Circuito monofásico (127V) para tomadas de um laboratório. <strong>I<sub>b</sub> = 16 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura de 30°C, eletroduto exclusivo. Distância: <strong>50 metros</strong> (critério severo para 127V). Limite de queda de tensão: 4%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-11" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-11" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-11" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-11" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-11" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-11" onchange="toggleComplete(11)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-12">
+            <div class="card-header">
+                <span class="card-title">Cenário 12: Torre de Iluminação de Campo de Futebol</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de torre de iluminação society. Circuito bifásico (220V fase-fase), <strong>I<sub>b</sub> = 22 A</strong>. Método <strong>B2</strong> (eletroduto aparente em parede), isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura ambiente de 30°C. Distância: <strong>85 metros</strong>. Limite de queda de tensão: 4%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-12" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-12" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-12" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-12" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-12" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-12" onchange="toggleComplete(12)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="bloco-header">Bloco 3: Instalações Industriais e Infraestruturas Diferenciadas</div>
+
+        <div class="card" id="card-13">
+            <div class="card-header">
+                <span class="card-title">Cenário 13: Torno Mecânico Industrial</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de um torno mecânico. Circuito trifásico (380V), <strong>I<sub>b</sub> = 63 A</strong>. Método <strong>C</strong> (cabos unipolares fixados em parede ou bandeja não perfurada), isolação <strong>EPR</strong>, 3 condutores carregados. Temperatura ambiente de <strong>40°C</strong>, sem agrupamento. Distância: 30 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-13" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-13" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-13" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-13" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-13" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-13" onchange="toggleComplete(13)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-14">
+            <div class="card-header">
+                <span class="card-title">Cenário 14: Máquina Injetora de Plástico</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de máquina injetora. Circuito trifásico (380V), <strong>I<sub>b</sub> = 110 A</strong>. Método <strong>F</strong> (cabos unipolares em leito perfurado, em trifólio), isolação <strong>XLPE/EPR</strong>, 3 condutores carregados. Temperatura de 30°C. O leito contém outros <strong>2 circuitos semelhantes</strong> (total de 3 no leito). Distância: 45 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-14" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-14" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-14" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-14" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-14" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-14" onchange="toggleComplete(14)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-15">
+            <div class="card-header">
+                <span class="card-title">Cenário 15: Painel de Climatização (Chiller)</span>
+            </div>
+            <div class="card-desc">
+                Painel de climatização industrial. Circuito trifásico (440V), <strong>I<sub>b</sub> = 145 A</strong>. Método <strong>C</strong> (cabo multipolar em calha fechada), isolação <strong>EPR</strong>, 3 condutores carregados. Temperatura de 35°C, agrupado com <strong>mais 2 cabos multipolares</strong> na mesma calha. Distância: 60 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-15" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-15" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-15" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-15" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-15" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-15" onchange="toggleComplete(15)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-16">
+            <div class="card-header">
+                <span class="card-title">Cenário 16: Alimentador Geral de Galpão Logístico</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de galpão a partir da subestação. Circuito trifásico com neutro (380V/220V). Carga com forte presença de harmônicas (exige considerar o <strong>neutro como condutor carregado</strong>, totalizando 4 condutores carregados). <strong>I<sub>b</sub> = 80 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>. Temperatura de 30°C, exclusivo. Distância: 70 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-16" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-16" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-16" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-16" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-16" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-16" onchange="toggleComplete(16)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-17">
+            <div class="card-header">
+                <span class="card-title">Cenário 17: Subquadro de Distribuição Industrial</span>
+            </div>
+            <div class="card-desc">
+                Circuito alimentador de subquadro. Circuito trifásico (380V), <strong>I<sub>b</sub> = 190 A</strong>. Método <strong>F</strong> (cabos unipolares justapostos horizontalmente em prateleiras), isolação <strong>EPR</strong>, 3 condutores carregados. Temperatura de 30°C. Total de <strong>4 circuitos</strong> dispostos na mesma prateleira. Distância: 55 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-17" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-17" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-17" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-17" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-17" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-17" onchange="toggleComplete(17)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-18">
+            <div class="card-header">
+                <span class="card-title">Cenário 18: Ponte Rolante de Galpão</span>
+            </div>
+            <div class="card-desc">
+                Circuito para uma ponte rolante. Circuito trifásico (380V), <strong>I<sub>b</sub> = 52 A</strong>. Método <strong>C</strong> (cabo multipolar sobre parede), isolação <strong>PVC</strong>, 3 condutores carregados. Temperatura ambiente de 30°C, exclusivo. Distância: 40 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-18" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-18" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-18" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-18" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-18" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-18" onchange="toggleComplete(18)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="bloco-header">Bloco 4: Casos Críticos de Coordenação e Fatores de Correção Pesados</div>
+
+        <div class="card" id="card-19">
+            <div class="card-header">
+                <span class="card-title">Cenário 19: Alimentação de Motores sobre Estufa</span>
+            </div>
+            <div class="card-desc">
+                Circuito de motores. <strong>I<sub>b</sub> = 38 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 3 condutores carregados. Eletroduto embutido passando por cima de uma estufa industrial, elevando a temperatura local para <strong>50°C</strong>. Sem agrupamento. Distância: 20 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-19" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-19" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-19" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-19" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-19" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-19" onchange="toggleComplete(19)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-20">
+            <div class="card-header">
+                <span class="card-title">Cenário 20: Banco de Resistências de Aquecimento</span>
+            </div>
+            <div class="card-desc">
+                Circuito trifásico (220V), <strong>I<sub>b</sub> = 74 A</strong>. Método <strong>B1</strong>, isolação <strong>EPR</strong>, 3 condutores carregados. O eletroduto está congestionado, dividindo espaço com outros <strong>5 circuitos</strong> (total de 6 circuitos no mesmo duto). Temperatura de 30°C. Distância: 15 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-20" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-20" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-20" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-20" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-20" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-20" onchange="toggleComplete(20)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-21">
+            <div class="card-header">
+                <span class="card-title">Cenário 21: Calha Comercial para Manutenção</span>
+            </div>
+            <div class="card-desc">
+                Circuito de tomadas industriais para manutenção. Circuito monofásico (220V), <strong>I<sub>b</sub> = 26 A</strong>. Método <strong>B2</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Instalado em uma calha metálica fechada junto com outros <strong>8 circuitos</strong> monofásicos (total de 9). Temperatura de 30°C. Distância: 30 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-21" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-21" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-21" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-21" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-21" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-21" onchange="toggleComplete(21)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-22">
+            <div class="card-header">
+                <span class="card-title">Cenário 22: Compressores de Ar em Ambiente Quente</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de compressores. Circuito trifásico (380V), <strong>I<sub>b</sub> = 85 A</strong>. Método <strong>C</strong> (cabos unipolares em bandeja), isolação <strong>PVC</strong>, 3 condutores carregados. Temperatura ambiente de <strong>45°C</strong> e agrupado com <strong>3 circuitos</strong> na mesma bandeja (total de 4). Distância: 25 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-22" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-22" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-22" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-22" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-22" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-22" onchange="toggleComplete(22)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-23">
+            <div class="card-header">
+                <span class="card-title">Cenário 23: Iluminação de Alta Potência em Galpão</span>
+            </div>
+            <div class="card-desc">
+                Circuito misto de iluminação. Circuito monofásico (220V), <strong>I<sub>b</sub> = 19 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura ambiente de <strong>40°C</strong> e agrupado com <strong>4 circuitos</strong> no mesmo eletroduto (total de 5). Distância: 50 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-23" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-23" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-23" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-23" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-23" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-23" onchange="toggleComplete(23)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-24">
+            <div class="card-header">
+                <span class="card-title">Cenário 24: Máquina de Solda Industrial</span>
+            </div>
+            <div class="card-desc">
+                Alimentação de máquina de solda. Circuito bifásico (380V fase-fase), <strong>I<sub>b</sub> = 42 A</strong>. Método de referência principal <strong>B1</strong>, isolação <strong>EPR</strong>, 2 condutores carregados. Temperatura ambiente de 30°C, com agrupamento de <strong>3 circuitos</strong> no conduto. Distância: 35 metros.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-24" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-24" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-24" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-24" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-24" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-24" onchange="toggleComplete(24)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="bloco-header">Bloco 5: Desafios Integrados (Seção Mínima e Seleção de Disjuntores)</div>
+
+        <div class="card" id="card-25">
+            <div class="card-header">
+                <span class="card-title">Cenário 25: Circuito de Sinalização e Comando</span>
+            </div>
+            <div class="card-desc">
+                Circuito de sinalização/comando de um painel industrial para sensor externo. Corrente de projeto muito baixa: <strong>I<sub>b</sub> = 0,5 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura de 30°C, exclusivo. Distância: 10 metros. <em>(Desafio: Verificar a seção mínima regulamentar pela NBR 5410 para circuitos de comando!)</em>
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-25" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-25" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-25" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-25" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-25" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-25" onchange="toggleComplete(25)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-26">
+            <div class="card-header">
+                <span class="card-title">Cenário 26: Iluminação Residencial Full LED</span>
+            </div>
+            <div class="card-desc">
+                Circuito de iluminação residencial em LED. Corrente de projeto total calculada: <strong>I<sub>b</sub> = 1,2 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura de 30°C, eletroduto exclusivo. Distância: 12 metros. <em>(Desafio: Atenção à seção mínima de iluminação e ao disjuntor comercial mínimo viável!)</em>
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-26" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-26" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-26" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-26" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-26" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-26" onchange="toggleComplete(26)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-27">
+            <div class="card-header">
+                <span class="card-title">Cenário 27: Coordenação Comercial de Ar-Condicionado</span>
+            </div>
+            <div class="card-desc">
+                Circuito trifásico comercial de ar-condicionado. <strong>I<sub>b</sub> = 30 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 3 condutores carregados. Temperatura de 30°C, exclusivo. Distância: 20 metros. Escolha o disjuntor comercial correto e garanta a inequação regulamentar.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-27" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-27" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-27" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-27" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-27" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-27" onchange="toggleComplete(27)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-28">
+            <div class="card-header">
+                <span class="card-title">Cenário 28: Motobomba Monofásica Residencial</span>
+            </div>
+            <div class="card-desc">
+                Alimentando motobomba monofásica (220V), <strong>I<sub>b</sub> = 21 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, 2 condutores carregados. Temperatura de <strong>35°C</strong> e agrupado com <strong>mais 2 circuitos</strong> no eletroduto (total de 3). Distância: 45 metros. Limite de queda de tensão: 3%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-28" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-28" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-28" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-28" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-28" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-28" onchange="toggleComplete(28)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-29">
+            <div class="card-header">
+                <span class="card-title">Cenário 29: Panificação Industrial de Alta Performance</span>
+            </div>
+            <div class="card-desc">
+                Máquina de panificação trifásica (220V). <strong>I<sub>b</sub> = 58 A</strong>. Método <strong>C</strong>, isolação <strong>EPR</strong>, 3 condutores carregados. Temperatura ambiente de <strong>40°C</strong>, agrupado com <strong>mais 2 circuitos</strong> na mesma calha (total de 3). Distância: 38 metros. Limite de queda de tensão: 2%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-29" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-29" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-29" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-29" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-29" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-29" onchange="toggleComplete(29)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <div class="card" id="card-30">
+            <div class="card-header">
+                <span class="card-title">Cenário 30: Alimentador Geral Prumada de Prédio</span>
+            </div>
+            <div class="card-desc">
+                Circuito alimentador geral do medidor até o QDC no 5º andar. Circuito bifásico com neutro equilibrado (220V/127V, 2 condutores carregados). <strong>I<sub>b</sub> = 60 A</strong>. Método <strong>B1</strong>, isolação <strong>PVC</strong>, temp. 30°C. Sobe junto com outros <strong>3 circuitos</strong> de apartamentos (total 4 agrupados). Distância total: <strong>65 metros</strong>. Limite de queda de tensão rigoroso: 1%.
+            </div>
+            <div class="inputs-grid">
+                <div class="input-group">
+                    <label>Seção Mínima (mm²)</label>
+                    <input type="text" id="sec-min-30" placeholder="Ex: 1.5">
+                </div>
+                <div class="input-group">
+                    <label>Fatores (FCT × FCA)</label>
+                    <input type="text" id="fat-30" placeholder="Ex: 0.70">
+                </div>
+                <div class="input-group">
+                    <label>Corrente Iz' Corrigida</label>
+                    <input type="text" id="iz-30" placeholder="Ex: 24.5 A">
+                </div>
+                <div class="input-group">
+                    <label>Disjuntor In Escolhido</label>
+                    <input type="text" id="in-30" placeholder="Ex: 20 A">
+                </div>
+                <div class="input-group" style="grid-column: span 2;">
+                    <label>Seção Final Pós Queda de Tensão (mm²)</label>
+                    <input type="text" id="sec-fin-30" placeholder="Seção final adotada">
+                </div>
+            </div>
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="check-30" onchange="toggleComplete(30)">
+                    Marcar como Resolvido
+                </label>
+            </div>
+        </div>
+    
+        <button type="button" class="btn-clear" onclick="clearAll()">Limpar Todas as Respostas</button>
+    </form>
+</div>
+
+<script>
+    const totalScenarios = 30;
+
+    // Carregar dados salvos ao abrir a página
+    window.onload = function() {
+        for (let i = 1; i <= totalScenarios; i++) {
+            // Restaurar inputs
+            const fields = [`sec-min-${i}`, `fat-${i}`, `iz-${i}`, `in-${i}`, `sec-fin-${i}`];
+            fields.forEach(f => {
+                const val = localStorage.getItem(f);
+                if (val) document.getElementById(f).value = val;
+                
+                // Ouvinte para salvar alterações em tempo real
+                document.getElementById(f).addEventListener('input', (e) => {
+                    localStorage.setItem(f, e.target.value);
+                });
+            });
+
+            // Restaurar checkboxes
+            const isChecked = localStorage.getItem(`check-${i}`) === 'true';
+            if (isChecked) {
+                document.getElementById(`check-${i}`).checked = true;
+                document.getElementById(`card-${i}`).classList.add('completed');
+            }
+        }
+        updateProgress();
+    };
+
+    // Alternar estado de completado
+    function toggleComplete(id) {
+        const checkbox = document.getElementById(`check-${id}`);
+        const card = document.getElementById(`card-${id}`);
+        
+        if (checkbox.checked) {
+            card.classList.add('completed');
+            localStorage.setItem(`check-${id}`, 'true');
+        } else {
+            card.classList.remove('completed');
+            localStorage.setItem(`check-${id}`, 'false');
+        }
+        updateProgress();
+    }
+
+    // Atualizar barra de progresso
+    function updateProgress() {
+        let count = 0;
+        for (let i = 1; i <= totalScenarios; i++) {
+            if (document.getElementById(`check-${i}`).checked) {
+                count++;
+            }
+        }
+        const pct = (count / totalScenarios) * 100;
+        document.getElementById('progress-bar').style.width = pct + '%';
+        document.getElementById('progress-count').innerText = `${count} / ${totalScenarios} resolvidos`;
+    }
+
+    // Limpar armazenamento
+    function clearAll() {
+        if (confirm('Tem certeza que deseja apagar todo o progresso e rascunhos?')) {
+            localStorage.clear();
+            document.getElementById('exercises-form').reset();
+            for (let i = 1; i <= totalScenarios; i++) {
+                document.getElementById(`card-${i}`).classList.remove('completed');
+            }
+            updateProgress();
+        }
+    }
+</script>
+</body>
+</html>

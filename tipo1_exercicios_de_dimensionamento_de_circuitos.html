@@ -1,0 +1,189 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.container { padding: 1.5rem 0; }
+.header { margin-bottom: 1.5rem; }
+.header h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+.header p { font-size: 13px; color: var(--color-text-secondary); }
+.block { margin-bottom: 1.5rem; }
+.block-title {
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 6px 10px;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 8px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.block-sub { font-size: 11px; font-weight: 400; letter-spacing: 0; opacity: 0.75; display: block; margin-top: 2px; }
+.b1 { background: #E6F1FB; color: #0C447C; }
+.b2 { background: #E1F5EE; color: #085041; }
+.b3 { background: #FAECE7; color: #712B13; }
+.b4 { background: #FAEEDA; color: #633806; }
+.b5 { background: #EEEDFE; color: #3C3489; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+.card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+.card.active { border-color: var(--color-border-primary); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.card-num { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+.n1 { background: #B5D4F4; color: #0C447C; }
+.n2 { background: #9FE1CB; color: #085041; }
+.n3 { background: #F5C4B3; color: #712B13; }
+.n4 { background: #FAC775; color: #633806; }
+.n5 { background: #CECBF6; color: #3C3489; }
+.card-title { font-size: 13px; font-weight: 500; line-height: 1.3; flex: 1; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.tag { font-size: 10px; padding: 1px 6px; border-radius: 99px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); white-space: nowrap; }
+.card-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; display: none; }
+.card.active .card-body { display: block; }
+.row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+.lbl { color: var(--color-text-tertiary); flex-shrink: 0; }
+.val { font-weight: 500; color: var(--color-text-primary); text-align: right; }
+.desafio { margin-top: 6px; padding: 6px 8px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size: 11px; color: var(--color-text-secondary); border-left: 2px solid var(--color-border-secondary); }
+.tip { margin-top: 1.5rem; padding: 12px 16px; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); }
+.tip-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.tip-steps { list-style: none; padding: 0; }
+.tip-steps li { font-size: 12px; color: var(--color-text-secondary); display: flex; gap: 8px; margin-bottom: 5px; line-height: 1.5; }
+.snum { font-size: 11px; font-weight: 500; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 99px; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; color: var(--color-text-primary); }
+</style>
+
+<div class="container">
+<div class="header">
+  <h1>30 cen&aacute;rios de dimensionamento el&eacute;trico</h1>
+  <p>Toque em um cen&aacute;rio para ver os dados detalhados &middot; NBR&nbsp;5410 &middot; Cat&aacute;logo Corfio</p>
+</div>
+<div id="root"></div>
+<div class="tip">
+  <div class="tip-title"><i class="ti ti-list-check" aria-hidden="true" style="font-size:16px"></i> Passo a passo para cada cen&aacute;rio</div>
+  <ul class="tip-steps">
+    <li><span class="snum">1</span> Identificar a se&ccedil;&atilde;o m&iacute;nima pelo tipo de circuito (ilumina&ccedil;&atilde;o: 1,5&nbsp;mm&sup2; &middot; for&ccedil;a/tomadas: 2,5&nbsp;mm&sup2;)</li>
+    <li><span class="snum">2</span> Calcular a corrente corrigida: <strong>Iz&prime; = Iz &times; FCT &times; FCA</strong></li>
+    <li><span class="snum">3</span> Garantir Iz&prime; &ge; Ib e escolher disjuntor: <strong>Ib &le; In &le; Iz&prime;</strong></li>
+    <li><span class="snum">4</span> Validar queda de tens&atilde;o pelo tabelamento Corfio. Se &Delta;V &gt; limite &rarr; aumentar se&ccedil;&atilde;o e recalcular</li>
+  </ul>
+</div>
+</div>
+
+<script>
+var blocks = [
+  {
+    id:1, cls:"b1", ncls:"n1",
+    label:"Bloco 1",
+    title:"Circuitos Residenciais e Comerciais B\u00e1sicos",
+    sub:"M\u00e9todos A1/B1 \u00b7 se\u00e7\u00f5es m\u00ednimas \u00b7 fatores de corre\u00e7\u00e3o iniciais",
+    cenarios:[
+      {n:1,title:"Ilumina\u00e7\u00e3o sala comercial",tags:["B1","PVC","2 cond.","30\u00b0C","15 m"],ib:"8 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"15 m",fat:"Nenhum (exclusivo)",vt:null,des:"Verificar se\u00e7\u00e3o m\u00ednima para ilumina\u00e7\u00e3o e escolher disjuntor compat\u00edvel com Ib=8 A."},
+      {n:2,title:"TUG quarto residencial",tags:["B1","PVC","2 cond.","35\u00b0C","22 m"],ib:"12 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"35\u00b0C",dist:"22 m",fat:"FCT (35\u00b0C)",vt:null,des:"Aplicar FCT por temperatura > 30\u00b0C. Eletroduto exclusivo."},
+      {n:3,title:"Chuveiro el\u00e9trico 220 V / 7700 W",tags:["B1","PVC","2 cond.","30\u00b0C","18 m","FCA"],ib:"35 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"18 m",fat:"FCA \u2014 3 circuitos no conduto",vt:null,des:"Agrupamento com 2 outros circuitos exige FCA. Alta corrente Ib=35 A."},
+      {n:4,title:"TUGs cozinha comercial",tags:["B1","EPR","2 cond.","40\u00b0C","25 m"],ib:"18 A",met:"B1",iso:"EPR (90\u00b0C)",cond:"2 carregados",temp:"40\u00b0C",dist:"25 m",fat:"FCT (40\u00b0C) + FCA (2 circuitos)",vt:null,des:"Combina\u00e7\u00e3o FCT + FCA com isola\u00e7\u00e3o EPR. Usar tabela correta para 90\u00b0C."},
+      {n:5,title:"Ar-condicionado central (trif\u00e1sico)",tags:["B1","PVC","3 cond.","30\u00b0C","35 m"],ib:"28 A",met:"B1",iso:"PVC",cond:"3 carregados",temp:"30\u00b0C",dist:"35 m",fat:"Nenhum (exclusivo)",vt:null,des:"Circuito trif\u00e1sico equilibrado. Atentar para se\u00e7\u00e3o m\u00ednima de circuito de for\u00e7a."},
+      {n:6,title:"Ilumina\u00e7\u00e3o externa condom\u00ednio",tags:["D","PVC","2 cond.","20\u00b0C","60 m"],ib:"6 A",met:"D (enterrado)",iso:"PVC",cond:"2 carregados",temp:"20\u00b0C (solo)",dist:"60 m",fat:"FCA \u2014 2 circuitos no duto",vt:"Aten\u00e7\u00e3o \u00e0 queda em 60 m",des:"M\u00e9todo D com solo padr\u00e3o 20\u00b0C. Comprimento longo: verificar \u0394V."}
+    ]
+  },
+  {
+    id:2, cls:"b2", ncls:"n2",
+    label:"Bloco 2",
+    title:"Queda de Tens\u00e3o como Fator Determinante",
+    sub:"Comprimentos longos \u00b7 se\u00e7\u00e3o por capacidade pode n\u00e3o atender \u0394V",
+    cenarios:[
+      {n:7,title:"Alimenta\u00e7\u00e3o de ed\u00edcula (75 m)",tags:["B1","PVC","2 cond.","30\u00b0C","75 m","2%"],ib:"24 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"75 m",fat:"Nenhum",vt:"Limite 2%",des:"Dist\u00e2ncia elevada tende a impor se\u00e7\u00e3o maior. Usar tabela Corfio \u0394V/(A\u00b7km)."},
+      {n:8,title:"Bomba de recalque (motor 3F 380 V)",tags:["B1","EPR","3 cond.","30\u00b0C","90 m","4%"],ib:"15 A",met:"B1",iso:"EPR",cond:"3 carregados",temp:"30\u00b0C",dist:"90 m",fat:"Nenhum",vt:"Limite 4%",des:"Motor trif\u00e1sico a 380 V. 90 m: verificar se se\u00e7\u00e3o por capacidade atende \u0394V."},
+      {n:9,title:"Quiosque de praia (120 m)",tags:["D","EPR","2 cond.","25\u00b0C","120 m","3%"],ib:"32 A",met:"D (enterrado direto)",iso:"EPR",cond:"2 carregados",temp:"25\u00b0C (solo)",dist:"120 m",fat:"Nenhum",vt:"Limite 3%",des:"Maior comprimento da lista. EPR com M\u00e9todo D. Queda de tens\u00e3o quase certamente determinante."},
+      {n:10,title:"Forno de padaria (3F 220 V)",tags:["B1","PVC","3 cond.","45\u00b0C","40 m","2,5%"],ib:"45 A",met:"B1",iso:"PVC",cond:"3 carregados",temp:"45\u00b0C",dist:"40 m",fat:"FCT (45\u00b0C) + FCA (2 circuitos)",vt:"Limite 2,5%",des:"Alta temperatura + agrupamento + corrente alta. Verificar se o cabo atende capacidade e \u0394V."},
+      {n:11,title:"Lab. de inform\u00e1tica 127 V (50 m)",tags:["B1","PVC","2 cond.","30\u00b0C","50 m","4%"],ib:"16 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"50 m",fat:"Nenhum",vt:"Limite 4%",des:"Tens\u00e3o de 127 V torna o crit\u00e9rio de \u0394V mais severo. Comparar crit\u00e9rio percentual vs. absoluto."},
+      {n:12,title:"Torre ilumina\u00e7\u00e3o campo society",tags:["B2","PVC","2 cond.","30\u00b0C","85 m","4%"],ib:"22 A",met:"B2 (eletroduto aparente)",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"85 m",fat:"Nenhum",vt:"Limite 4%",des:"Circuito bif\u00e1sico 220 V F-F, M\u00e9todo B2. 85 m: queda de tens\u00e3o provavelmente determinante."}
+    ]
+  },
+  {
+    id:3, cls:"b3", ncls:"n3",
+    label:"Bloco 3",
+    title:"Instala\u00e7\u00f5es Industriais e Infraestruturas",
+    sub:"M\u00e9todos C e F \u00b7 leitos e calhas \u00b7 isola\u00e7\u00e3o t\u00e9rmica superior",
+    cenarios:[
+      {n:13,title:"Torno mec\u00e2nico industrial (3F 380 V)",tags:["C","EPR","3 cond.","40\u00b0C","30 m"],ib:"63 A",met:"C (unipolares em parede/bandeja)",iso:"EPR",cond:"3 carregados",temp:"40\u00b0C",dist:"30 m",fat:"FCT (40\u00b0C)",vt:null,des:"M\u00e9todo C com EPR a 40\u00b0C. Corrente elevada de 63 A."},
+      {n:14,title:"M\u00e1quina injetora de pl\u00e1stico",tags:["F","XLPE","3 cond.","30\u00b0C","45 m","FCA"],ib:"110 A",met:"F (leito perfurado, trif\u00f3lio)",iso:"XLPE/EPR",cond:"3 carregados",temp:"30\u00b0C",dist:"45 m",fat:"FCA \u2014 3 circuitos no leito",vt:null,des:"M\u00e9todo F em trif\u00f3lio. Alta corrente 110 A. FCA por 3 circuitos no leito."},
+      {n:15,title:"Chiller industrial (3F 440 V)",tags:["C","EPR","3 cond.","35\u00b0C","60 m"],ib:"145 A",met:"C (multipolar em calha fechada)",iso:"EPR",cond:"3 carregados",temp:"35\u00b0C",dist:"60 m",fat:"FCT (35\u00b0C) + FCA (3 cabos na calha)",vt:null,des:"145 A a 440 V. Cabo multipolar em calha fechada. FCT + FCA combinados."},
+      {n:16,title:"Galp\u00e3o log\u00edstico \u2014 harm\u00f4nicas",tags:["B1","PVC","4 cond.","30\u00b0C","70 m"],ib:"80 A",met:"B1",iso:"PVC",cond:"4 carregados (neutro por harm\u00f4nicas)",temp:"30\u00b0C",dist:"70 m",fat:"Nenhum",vt:null,des:"Harm\u00f4nicas \u2192 neutro conta como condutor carregado \u2192 4 condutores. Usar FCA correto."},
+      {n:17,title:"Alimentador de subquadro industrial",tags:["F","EPR","3 cond.","30\u00b0C","55 m"],ib:"190 A",met:"F (unipolares justapostos)",iso:"EPR",cond:"3 carregados",temp:"30\u00b0C",dist:"55 m",fat:"FCA \u2014 4 circuitos na prateleira",vt:null,des:"Maior corrente da lista: 190 A. M\u00e9todo F justaposto. FCA para 4 circuitos."},
+      {n:18,title:"Ponte rolante (3F 380 V)",tags:["C","PVC","3 cond.","30\u00b0C","40 m"],ib:"52 A",met:"C (multipolar sobre parede)",iso:"PVC",cond:"3 carregados",temp:"30\u00b0C",dist:"40 m",fat:"Nenhum (exclusivo)",vt:null,des:"M\u00e9todo C com PVC. Sem fatores de corre\u00e7\u00e3o \u2014 verificar se\u00e7\u00e3o e disjuntor."}
+    ]
+  },
+  {
+    id:4, cls:"b4", ncls:"n4",
+    label:"Bloco 4",
+    title:"Casos Cr\u00edticos de Fatores de Corre\u00e7\u00e3o",
+    sub:"FCT e/ou FCA pesados \u00b7 Iz\u2019 reduzida drasticamente",
+    cenarios:[
+      {n:19,title:"Circuito sobre estufa industrial (50\u00b0C)",tags:["B1","PVC","3 cond.","50\u00b0C","20 m"],ib:"38 A",met:"B1 (acima de estufa)",iso:"PVC",cond:"3 carregados",temp:"50\u00b0C",dist:"20 m",fat:"FCT (50\u00b0C) \u2014 muito severo",vt:null,des:"Temperatura local de 50\u00b0C. FCT muito restritivo. Cabo bem maior que o esperado."},
+      {n:20,title:"Banco de resist\u00eancias (6 circuitos)",tags:["B1","EPR","3 cond.","30\u00b0C","15 m"],ib:"74 A",met:"B1",iso:"EPR",cond:"3 carregados",temp:"30\u00b0C",dist:"15 m",fat:"FCA \u2014 6 circuitos no duto",vt:null,des:"Seis circuitos no mesmo eletroduto \u2192 FCA muito reduzido. Alto Ib de 74 A."},
+      {n:21,title:"Tomadas industriais \u2014 calha com 8 circuitos",tags:["B2","PVC","2 cond.","30\u00b0C","30 m"],ib:"26 A",met:"B2 (calha met\u00e1lica fechada)",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"30 m",fat:"FCA \u2014 8 circuitos na calha",vt:null,des:"FCA para 8 circuitos \u00e9 bastante restritivo. Verificar qual tabela de FCA usar para calha met\u00e1lica."},
+      {n:22,title:"Compressores de ar (3F 380 V)",tags:["C","PVC","3 cond.","45\u00b0C","25 m"],ib:"85 A",met:"C (unipolares em bandeja)",iso:"PVC",cond:"3 carregados",temp:"45\u00b0C",dist:"25 m",fat:"FCT (45\u00b0C) + FCA (3 circuitos)",vt:null,des:"Alta temperatura + agrupamento + corrente alta. Verificar Iz\u2019 resultante."},
+      {n:23,title:"Ilumina\u00e7\u00e3o de alta pot\u00eancia em galp\u00e3o",tags:["B1","PVC","2 cond.","40\u00b0C","50 m"],ib:"19 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"40\u00b0C",dist:"50 m",fat:"FCT (40\u00b0C) + FCA (4 circuitos)",vt:null,des:"FCT + FCA combinados. 50 m: verificar \u0394V ap\u00f3s definir se\u00e7\u00e3o por capacidade."},
+      {n:24,title:"M\u00e1quina de solda (bif\u00e1sico 380 V F-F)",tags:["B1","EPR","2 cond.","30\u00b0C","35 m"],ib:"42 A",met:"B1 (trecho tamb\u00e9m enterrado)",iso:"EPR",cond:"2 carregados",temp:"30\u00b0C",dist:"35 m",fat:"FCA \u2014 3 circuitos agrupados",vt:null,des:"Trecho misto B1 + enterrado. Calcular pelo pior caso: B1 com agrupamento de 3."}
+    ]
+  },
+  {
+    id:5, cls:"b5", ncls:"n5",
+    label:"Bloco 5",
+    title:"Desafios Integrados \u2014 Se\u00e7\u00e3o M\u00ednima e Disjuntores",
+    sub:"Todas as regras simult\u00e2neas \u00b7 correntes comerciais mudam o projeto",
+    cenarios:[
+      {n:25,title:"Sinaliza\u00e7\u00e3o/comando \u2014 sensor externo",tags:["B1","PVC","2 cond.","30\u00b0C","10 m"],ib:"0,5 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"10 m",fat:"Nenhum",vt:null,des:"Ib m\u00ednimo. Qual se\u00e7\u00e3o m\u00ednima para circuito de comando/sinaliza\u00e7\u00e3o conforme NBR 5410? Qual disjuntor aplicar?"},
+      {n:26,title:"Ilumina\u00e7\u00e3o LED residencial",tags:["B1","PVC","2 cond.","30\u00b0C","12 m"],ib:"1,2 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"30\u00b0C",dist:"12 m",fat:"Nenhum",vt:null,des:"Corrente muito baixa. Se\u00e7\u00e3o m\u00ednima para ilumina\u00e7\u00e3o domina. Qual o menor disjuntor comercial aplic\u00e1vel?"},
+      {n:27,title:"Ar-condicionado comercial 3F (32 A ou 40 A?)",tags:["B1","PVC","3 cond.","30\u00b0C","20 m"],ib:"30 A",met:"B1",iso:"PVC",cond:"3 carregados",temp:"30\u00b0C",dist:"20 m",fat:"Nenhum",vt:null,des:"Ib = 30 A. Disjuntor de 32 A ou 40 A? Verificar se Iz\u2019 do cabo atende a regra Ib \u2264 In \u2264 Iz\u2019."},
+      {n:28,title:"Motobomba monof\u00e1sica residencial",tags:["B1","PVC","2 cond.","35\u00b0C","45 m","3%"],ib:"21 A",met:"B1",iso:"PVC",cond:"2 carregados",temp:"35\u00b0C",dist:"45 m",fat:"FCT (35\u00b0C) + FCA (3 circuitos)",vt:"Limite 3%",des:"FCT + FCA + \u0394V simult\u00e2neos. Determinar cabo e disjuntor final."},
+      {n:29,title:"M\u00e1quina de panifica\u00e7\u00e3o industrial (3F)",tags:["C","EPR","3 cond.","40\u00b0C","38 m","2%"],ib:"58 A",met:"C",iso:"EPR",cond:"3 carregados",temp:"40\u00b0C",dist:"38 m",fat:"FCT (40\u00b0C) + FCA (3 circuitos)",vt:"Limite 2%",des:"FCT + FCA + queda de tens\u00e3o m\u00e1xima de 2%: cabo cresce muito. Coordenar disjuntor resultante."},
+      {n:30,title:"Alimentador geral \u2014 apartamento alto padr\u00e3o",tags:["B1","PVC","2 cond.","30\u00b0C","65 m","1%"],ib:"60 A",met:"B1 (prumada)",iso:"PVC",cond:"2 carregados (bif\u00e1sico sem harm\u00f4nicas)",temp:"30\u00b0C",dist:"65 m",fat:"FCA \u2014 4 aptos agrupados",vt:"Limite rigoroso: 1%",des:"Limite de 1% de \u0394V \u00e9 muito restritivo. FCA por 4 circuitos. Se\u00e7\u00e3o determinada quase inteiramente pela queda de tens\u00e3o."}
+    ]
+  }
+];
+
+var root = document.getElementById('root');
+blocks.forEach(function(block) {
+  var bdiv = document.createElement('div');
+  bdiv.className = 'block';
+  var btitle = document.createElement('div');
+  btitle.className = 'block-title ' + block.cls;
+  btitle.innerHTML = '<i class="ti ti-bolt" aria-hidden="true" style="font-size:14px;flex-shrink:0;margin-top:1px"></i><span><span>' + block.label + ': ' + block.title + '</span><span class="block-sub">' + block.sub + '</span></span>';
+  bdiv.appendChild(btitle);
+  var grid = document.createElement('div');
+  grid.className = 'grid';
+  block.cenarios.forEach(function(c) {
+    var card = document.createElement('div');
+    card.className = 'card';
+    var vtRow = c.vt ? '<div class="row"><span class="lbl">Queda \u0394V</span><span class="val">' + c.vt + '</span></div>' : '';
+    card.innerHTML =
+      '<div class="card-top">' +
+        '<span class="card-num ' + block.ncls + '">C' + c.n + '</span>' +
+        '<span class="card-title">' + c.title + '</span>' +
+      '</div>' +
+      '<div class="card-meta">' + c.tags.map(function(t){ return '<span class="tag">'+t+'</span>'; }).join('') + '</div>' +
+      '<div class="card-body">' +
+        '<div class="row"><span class="lbl">Ib</span><span class="val">' + c.ib + '</span></div>' +
+        '<div class="row"><span class="lbl">M\u00e9todo</span><span class="val">' + c.met + '</span></div>' +
+        '<div class="row"><span class="lbl">Isola\u00e7\u00e3o</span><span class="val">' + c.iso + '</span></div>' +
+        '<div class="row"><span class="lbl">Condutores</span><span class="val">' + c.cond + '</span></div>' +
+        '<div class="row"><span class="lbl">Temperatura</span><span class="val">' + c.temp + '</span></div>' +
+        '<div class="row"><span class="lbl">Dist\u00e2ncia</span><span class="val">' + c.dist + '</span></div>' +
+        '<div class="row"><span class="lbl">Fatores</span><span class="val">' + c.fat + '</span></div>' +
+        vtRow +
+        '<div class="desafio"><i class="ti ti-bulb" aria-hidden="true" style="font-size:13px;margin-right:4px"></i>' + c.des + '</div>' +
+      '</div>';
+    card.addEventListener('click', function() {
+      var was = card.classList.contains('active');
+      grid.querySelectorAll('.card').forEach(function(el){ el.classList.remove('active'); });
+      if (!was) card.classList.add('active');
+    });
+    grid.appendChild(card);
+  });
+  bdiv.appendChild(grid);
+  root.appendChild(bdiv);
+});
+</script>
